@@ -4,11 +4,11 @@
 #include <iomanip>
 #include <string>
 
-//Commands to run the code
-// First open the terminal in the folder where the file is saved
-// cntrl ` to open the terminal
-// g++ main.cpp -o main (to compile the code)
-// ./main.exe
+// Commands to run the code
+//  First open the terminal in the folder where the file is saved
+//  cntrl ` to open the terminal
+//  g++ main.cpp -o main (to compile the code)
+//  ./main.exe
 
 using namespace std;
 
@@ -47,7 +47,7 @@ public:
 // Create a new account
 void BankAccount::createAccount()
 {
-    ifstream ifs("accounts.txt"); //This to read whether the account number already exists
+    ifstream ifs("accounts.txt");           // This to read whether the account number already exists
     ofstream ofs("accounts.txt", ios::app); // Open file in append mode
 
     if (!ifs || !ofs)
@@ -58,6 +58,12 @@ void BankAccount::createAccount()
 
     cout << "Enter Account Number: ";
     cin >> accountNumber;
+
+    if (accountNumber.length() <= 5)
+    {
+        cout << "Account number must have more than 5 digits. Please enter a valid account number." << endl;
+        return;
+    }
 
     if (accountExists(accountNumber))
     {
@@ -245,6 +251,12 @@ void BankAccount::deleteAccount(const string &accountNumberToDelete)
 // Deposit into an account
 void BankAccount::deposit(const string &accountNumberToDeposit, float depositAmount)
 {
+    if (depositAmount <= 0)
+    {
+        cout << "Deposit amount must be greater than zero!" << endl;
+        return;
+    }
+
     cout << "\n-------------------------\n";
     ifstream ifs("accounts.txt");
     ofstream ofs("temp.txt"); // Temporary file to store updated accounts
@@ -297,6 +309,12 @@ void BankAccount::deposit(const string &accountNumberToDeposit, float depositAmo
 // Withdraw from an account
 void BankAccount::withdraw(const string &accountNumberToWithdraw, float withdrawAmount)
 {
+    if (withdrawAmount <= 0)
+    {
+        cout << "Withdraw amount must be greater than zero!" << endl;
+        return;
+    }
+
     cout << "\n-------------------------\n";
     ifstream ifs("accounts.txt");
     ofstream ofs("temp.txt"); // Temporary file to store updated accounts
@@ -309,6 +327,7 @@ void BankAccount::withdraw(const string &accountNumberToWithdraw, float withdraw
 
     string line;
     bool accountFound = false;
+    bool confirmWithdraw = false;
 
     while (getline(ifs, line))
     {
@@ -327,10 +346,12 @@ void BankAccount::withdraw(const string &accountNumberToWithdraw, float withdraw
             {
                 cout << "Insufficient funds for account number " << accountNumberToWithdraw << endl;
                 ofs << accountNumber << "," << name << "," << fixed << setprecision(2) << balance << endl;
+                accountFound = true;
                 continue;
             }
             balance -= withdrawAmount;
             accountFound = true;
+            confirmWithdraw = true;
         }
 
         ofs << accountNumber << "," << name << "," << fixed << setprecision(2) << balance << endl;
@@ -342,13 +363,17 @@ void BankAccount::withdraw(const string &accountNumberToWithdraw, float withdraw
     remove("accounts.txt");
     rename("temp.txt", "accounts.txt");
 
-    if (accountFound)
+    if (!accountFound)
+    {
+        cout << "Account with number " << accountNumberToWithdraw << " not found." << endl;
+    }
+    else if (confirmWithdraw)
     {
         cout << "Withdrawal successful!" << endl;
     }
     else
     {
-        cout << "Account with number " << accountNumberToWithdraw << " not found." << endl;
+        cout << "Withdrawal unsuccessful!" << endl;
     }
 }
 
