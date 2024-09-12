@@ -4,6 +4,12 @@
 #include <iomanip>
 #include <string>
 
+//Commands to run the code
+// First open the terminal in the folder where the file is saved
+// cntrl ` to open the terminal
+// g++ main.cpp -o main (to compile the code)
+// ./main.exe
+
 using namespace std;
 
 class BankAccount
@@ -18,13 +24,13 @@ public:
     BankAccount(string accNum = "", string accName = "", float accBalance = 0.0)
         : accountNumber(accNum), name(accName), balance(accBalance) {}
 
-    // Getters
-    string getAccountNumber() const { return accountNumber; }
-    string getName() const { return name; }
-    float getBalance() const { return balance; }
+    // // Getters
+    // string getAccountNumber() const { return accountNumber; }
+    // string getName() const { return name; }
+    // float getBalance() const { return balance; }
 
     // Setters
-    void setBalance(float newBalance) { balance = newBalance; }
+    // void setBalance(float newBalance) { balance = newBalance; }
 
     // Methods
     void createAccount();
@@ -41,7 +47,7 @@ public:
 // Create a new account
 void BankAccount::createAccount()
 {
-    ifstream ifs("accounts.txt");
+    ifstream ifs("accounts.txt"); //This to read whether the account number already exists
     ofstream ofs("accounts.txt", ios::app); // Open file in append mode
 
     if (!ifs || !ofs)
